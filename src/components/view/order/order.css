@@ -5,6 +5,9 @@
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
   }
   
   .order-title {
@@ -44,4 +47,8 @@
   
   .order-btn:hover {
     background-color: #0056b3;
+  }
+  label {
+    display: flex;
+    gap: 10px;
   }

@@ -54,6 +54,7 @@ const Order = () => {
 
       <div className="order-section">
         <h3>Ishchilarni tanlang</h3>
+        <br />
         {ishchilar.map(ishchi => (
           <label key={ishchi.id}>
             <input
@@ -64,9 +65,9 @@ const Order = () => {
             />
             {ishchi.name}
           </label>
+          
         ))}
       </div>
-
       <div className="order-section">
         <h3>Obyektni tanlang</h3>
         <select value={selectedObyekt} onChange={(e) => setSelectedObyekt(e.target.value)}>
