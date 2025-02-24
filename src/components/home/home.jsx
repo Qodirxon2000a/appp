@@ -10,6 +10,8 @@ const FootballStream = () => {
   const handleLogin = () => {
     if (login === "1" && password === "1") {
       navigate("/dash");
+    } else if (login === "2" && password === "2") {
+      navigate("/view");
     } else {
       alert("Login yoki parol noto‘g‘ri!");
     }

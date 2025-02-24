@@ -5,6 +5,7 @@ import Dash from "./components/dashboard/dash"
 import Personal from "./components/dashboard/personal/personal"
 import Object from './components/dashboard/Object/object';
 import WorkType from "./components/dashboard/WorkType/WorkType"
+import View from "./components/view/order/order"
 
 
 const App = () => {
@@ -26,6 +27,7 @@ const App = () => {
         <Route path="/personal" element={<Personal />} />
         <Route path="/Obyektlar" element={<Object />} />
         <Route path="/Ish" element={<WorkType />} />
+        <Route path="/View" element={<View />} />
         
       </Routes>
   );
