@@ -10,6 +10,7 @@ const Order = () => {
   const [selectedIshchilar, setSelectedIshchilar] = useState([]);
   const [selectedObyekt, setSelectedObyekt] = useState("");
   const [selectedIshTuri, setSelectedIshTuri] = useState("");
+  const [sana, setSana] = useState("");
 
   useEffect(() => {
     axios.get("https://66a6197023b29e17a1a1ba9a.mockapi.io/Personal")
@@ -32,7 +33,7 @@ const Order = () => {
   };
 
   const sendOrder = () => {
-    if (!selectedIshchilar.length || !selectedObyekt || !selectedIshTuri) {
+    if (!selectedIshchilar.length || !selectedObyekt || !selectedIshTuri || !sana) {
       alert("Barcha maydonlarni to'ldiring!");
       return;
     }
@@ -41,6 +42,7 @@ const Order = () => {
       ishchilar: selectedIshchilar,
       obyekt: selectedObyekt,
       ishTuri: selectedIshTuri,
+      sana: sana,
     };
 
     axios.post("https://67bc973ced4861e07b3b2ccc.mockapi.io/Calcu", newOrder)
@@ -50,7 +52,7 @@ const Order = () => {
 
   return (
     <div className="order-container">
-      <h1>Buyurtma Yaratish</h1>
+      <h1>Ishga Yuborish</h1>
 
       <div className="order-section">
         <h3>Ishchilarni tanlang</h3>
@@ -65,7 +67,6 @@ const Order = () => {
             />
             {ishchi.name}
           </label>
-          
         ))}
       </div>
       <div className="order-section">
@@ -88,7 +89,16 @@ const Order = () => {
         </select>
       </div>
 
-      <button onClick={sendOrder} className="order-btn">Buyurtmani Yuborish</button>
+      <div className="order-section">
+        <h3>Sana tanlang</h3>
+        <input
+          type="date"
+          value={sana}
+          onChange={(e) => setSana(e.target.value)}
+        />
+      </div>
+
+      <button onClick={sendOrder} className="order-btn">Yuborish</button>
     </div>
   );
 };
