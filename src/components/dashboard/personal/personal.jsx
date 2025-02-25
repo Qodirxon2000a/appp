@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import "./personal.css";
+import "./workers.css";
 
 const API_URL = "https://66a6197023b29e17a1a1ba9a.mockapi.io/Personal";
 
@@ -69,10 +69,10 @@ const Personal = () => {
   };
 
   return (
-    <div className="personal-container">
-      <h1 className="personal-title">Ishchilar Boshqaruvi</h1>
+    <div className="workers-container">
+      <h1 className="workers-title">Ishchilar Boshqaruvi</h1>
 
-      <div className="personal-form">
+      <div className="workers-form">
         <input type="text" name="name" placeholder="Ism" value={newIshchi.name} onChange={handleChange} />
         <input type="text" name="lavozim" placeholder="Lavozim" value={newIshchi.lavozim} onChange={handleChange} />
         <button onClick={handleSave} className="add-btn">
@@ -80,7 +80,8 @@ const Personal = () => {
         </button>
       </div>
 
-      <table className="personal-table">
+      {/* Ishchilar ro‘yxati jadvali */}
+      <table className="workers-table">
         <thead>
           <tr>
             <th>#</th>
@@ -96,8 +97,9 @@ const Personal = () => {
               <td>{ishchi.name}</td>
               <td>{ishchi.lavozim}</td>
               <td>
-                <button className="edit-btn" onClick={() => handleEdit(ishchi)}>✏️</button>
-                <button className="delete-btn" onClick={() => handleDelete(ishchi.id)}>🗑</button>
+                <button onClick={() => handleEdit(ishchi)} className="edit-btn">✏️</button>
+                <br />
+                <button onClick={() => handleDelete(ishchi.id)} className="delete-btn">🗑️</button>
               </td>
             </tr>
           ))}
