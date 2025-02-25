@@ -6,6 +6,7 @@ import Personal from "./components/dashboard/personal/personal"
 import Object from './components/dashboard/Object/object';
 import WorkType from "./components/dashboard/WorkType/WorkType"
 import View from "./components/view/order/order"
+import Calcu from "./components/calcu/calcu"
 
 
 const App = () => {
@@ -28,6 +29,8 @@ const App = () => {
         <Route path="/Obyektlar" element={<Object />} />
         <Route path="/Ish" element={<WorkType />} />
         <Route path="/View" element={<View />} />
+        <Route path="/Calcu" element={<Calcu />} />
+
         
       </Routes>
   );

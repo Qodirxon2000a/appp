@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "./order.css";
 
 const Order = () => {
@@ -11,6 +12,8 @@ const Order = () => {
   const [selectedObyekt, setSelectedObyekt] = useState("");
   const [selectedIshTuri, setSelectedIshTuri] = useState("");
   const [sana, setSana] = useState("");
+  
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get("https://66a6197023b29e17a1a1ba9a.mockapi.io/Personal")
@@ -46,7 +49,10 @@ const Order = () => {
     };
 
     axios.post("https://67bc973ced4861e07b3b2ccc.mockapi.io/Calcu", newOrder)
-      .then(() => alert("Buyurtma muvaffaqiyatli saqlandi!"))
+      .then(() => {
+        alert("Buyurtma muvaffaqiyatli saqlandi!");
+        navigate("/");
+      })
       .catch(err => console.error("Buyurtmani yuborishda xatolik", err));
   };
 
@@ -94,6 +100,7 @@ const Order = () => {
         <input
           type="date"
           value={sana}
+          min={new Date().toISOString().split('T')[0]}
           onChange={(e) => setSana(e.target.value)}
         />
       </div>

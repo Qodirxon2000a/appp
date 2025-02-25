@@ -1,0 +1,43 @@
+.personal-container {
+    width: 90%;
+    margin: auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .personal-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+  }
+  
+  .personal-table th, .personal-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .personal-table th {
+    background: #007bff;
+    color: white;
+  }
+  
+  .column-data {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .column-data span {
+    background: #eef;
+    padding: 5px;
+    border-radius: 5px;
+  }
+  
