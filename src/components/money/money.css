@@ -1,0 +1,73 @@
+.money-container {
+    width: 90%;
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .worker-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+  
+  .worker-item {
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .worker-item:hover, .worker-item.selected {
+    background: #0056b3;
+  }
+  
+  .salary-box {
+    margin-top: 20px;
+  }
+  
+  .salary-box input, .salary-box select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .salary-box button {
+    padding: 10px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .salary-box button:hover {
+    background: #218838;
+  }
+  
+  .salary-history {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .salary-history th, .salary-history td {
+    border: 1px solid #ddd;
+    padding: 10px;
+  }
+  
+  .salary-history th {
+    background: #007bff;
+    color: white;
+  }
+  

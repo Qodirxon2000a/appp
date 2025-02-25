@@ -14,10 +14,13 @@ const FootballStream = () => {
       navigate("/view");
     } else if (login === "3" && password === "3") {
       navigate("/calcu");
+    } else if (login === "4" && password === "4") { // Bu yer to'g'rilandi
+      navigate("/money");
     } else {
       alert("Login yoki parol noto‘g‘ri!");
     }
   };
+  
 
   return (
     <div className="login-container">

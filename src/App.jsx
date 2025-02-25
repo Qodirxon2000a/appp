@@ -7,6 +7,7 @@ import Object from './components/dashboard/Object/object';
 import WorkType from "./components/dashboard/WorkType/WorkType"
 import View from "./components/view/order/order"
 import Calcu from "./components/calcu/calcu"
+import Money from "./components/money/money"
 
 
 const App = () => {
@@ -30,6 +31,7 @@ const App = () => {
         <Route path="/Ish" element={<WorkType />} />
         <Route path="/View" element={<View />} />
         <Route path="/Calcu" element={<Calcu />} />
+        <Route path="/Money" element={<Money />} />
 
         
       </Routes>
