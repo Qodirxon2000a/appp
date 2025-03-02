@@ -1,207 +1,143 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./money.css";
 
 const Money = () => {
-  const [workers, setWorkers] = useState([]);
-  const [objects, setObjects] = useState([]);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [personalData, setPersonalData] = useState({});
+  const [objectData, setObjectData] = useState({});
+  const [priceData, setPriceData] = useState({});
   const [selectedWorker, setSelectedWorker] = useState(null);
-  const [salary, setSalary] = useState(0);
-  const [selectedObject, setSelectedObject] = useState("");
-  const [paymentHistory, setPaymentHistory] = useState([]);
-  const [groupedPayments, setGroupedPayments] = useState({});
-  const [modalPayments, setModalPayments] = useState([]);
-  const [earnedPayments, setEarnedPayments] = useState([]); // To'langan ma'lumotlar uchun yangi state
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("oyliklar"); // Qaysi button faol ekanligini kuzatish
 
   useEffect(() => {
-    axios.get("https://66a6197023b29e17a1a1ba9a.mockapi.io/Personal")
-      .then(res => setWorkers(res.data))
-      .catch(err => console.error("Ishchilarni yuklashda xatolik", err));
-
-    axios.get("https://66a6197023b29e17a1a1ba9a.mockapi.io/Object")
-      .then(res => setObjects(res.data))
-      .catch(err => console.error("Obyektlarni yuklashda xatolik", err));
-
-    fetchPaymentHistory();
+    axios
+      .get("https://67bc973ced4861e07b3b2ccc.mockapi.io/Calcu")
+      .then((response) => {
+        setData(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      });
   }, []);
 
-  const fetchPaymentHistory = () => {
-    axios.get("https://67bdf7a6321b883e790eaabf.mockapi.io/oyliklar")
-      .then(res => {
-        setPaymentHistory(res.data);
-        groupPayments(res.data);
+  useEffect(() => {
+    axios
+      .get("https://66a6197023b29e17a1a1ba9a.mockapi.io/Personal")
+      .then((response) => {
+        const personalMap = response.data.reduce((acc, person) => {
+          acc[person.id] = person.name;
+          return acc;
+        }, {});
+        setPersonalData(personalMap);
       })
-      .catch(err => console.error("Oyliklar tarixini yuklashda xatolik", err));
-  };
+      .catch((error) => {
+        console.error("Error fetching personal data:", error);
+      });
+  }, []);
 
-  const fetchEarnedHistory = (workerName) => {
-    axios.get("https://67bdf7a6321b883e790eaabf.mockapi.io/earned")
-      .then(res => {
-        const workerEarned = res.data.filter(payment => payment.workerName === workerName);
-        setEarnedPayments(workerEarned);
+  useEffect(() => {
+    axios
+      .get("https://66a6197023b29e17a1a1ba9a.mockapi.io/Object")
+      .then((response) => {
+        const objectMap = response.data.reduce((acc, obj) => {
+          acc[obj.id] = { name: obj.name, date: obj.sana };
+          return acc;
+        }, {});
+        setObjectData(objectMap);
       })
-      .catch(err => console.error("Earned tarixini yuklashda xatolik", err));
-  };
+      .catch((error) => {
+        console.error("Error fetching object data:", error);
+      });
+  }, []);
 
-  const groupPayments = (payments) => {
-    const grouped = payments.reduce((acc, payment) => {
-      const key = payment.workerName;
-      if (!acc[key]) {
-        acc[key] = { workerName: payment.workerName, totalAmount: 0, records: [] };
-      }
-      acc[key].totalAmount += Number(payment.amount);
-      acc[key].records.push(payment);
-      return acc;
-    }, {});
-    setGroupedPayments(grouped);
-  };
-
-  const handleSelectWorker = (worker) => {
-    setSelectedWorker(worker);
-  };
-
-  const handlePaySalary = () => {
-    if (!selectedWorker || salary <= 0 || !selectedObject) {
-      alert("Iltimos, ishchini tanlang, oylik kiriting va obyektni tanlang.");
-      return;
-    }
-
-    const workerEarned = groupedPayments[selectedWorker.name]?.totalAmount || 0;
-    if (workerEarned < salary) {
-      alert("Ishchining ishlab topgan puli yetarli emas!");
-      return;
-    }
-
-    const newPayment = {
-      workerName: selectedWorker.name,
-      amount: salary,
-      object: selectedObject,
-      date: new Date().toLocaleString(),
-    };
-
-    axios.post("https://67bdf7a6321b883e790eaabf.mockapi.io/earned", newPayment)
-      .then(() => {
-        const deductionPayment = {
-          workerName: selectedWorker.name,
-          amount: -salary,
-          object: selectedObject,
-          date: new Date().toLocaleString(),
-        };
-
-        axios.post("https://67bdf7a6321b883e790eaabf.mockapi.io/oyliklar", deductionPayment)
-          .then(() => {
-            alert(`✅ ${selectedWorker.name} ga ${selectedObject} obyektida ${salary} so‘m oylik berildi!`);
-            fetchPaymentHistory();
-            fetchEarnedHistory(selectedWorker.name); // To'langan ma'lumotlarni yangilash
-            closeModal();
-          })
-          .catch(err => console.error("Oylikdan ayrib tashlashda xatolik", err));
+  useEffect(() => {
+    axios
+      .get("https://67bc973ced4861e07b3b2ccc.mockapi.io/Worker")
+      .then((response) => {
+        const priceMap = response.data.reduce((acc, worker) => {
+          acc[worker.id] = worker.price;
+          return acc;
+        }, {});
+        setPriceData(priceMap);
       })
-      .catch(err => console.error("Earned API ga saqlashda xatolik", err));
+      .catch((error) => {
+        console.error("Error fetching price data:", error);
+      });
+  }, []);
 
-    setSalary(0);
-    setSelectedObject("");
-  };
-
-  const openModal = (workerName) => {
-    const worker = workers.find(w => w.name === workerName);
-    setSelectedWorker(worker);
-    setModalPayments(groupedPayments[workerName]?.records || []);
-    fetchEarnedHistory(workerName); // To'langan ma'lumotlarni yuklash
-    setActiveTab("oyliklar"); // Default holatda "Ishlagan kunlar" ko'rinadi
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedWorker(null);
-    setActiveTab("oyliklar");
-  };
-
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
+  const handleWorkerClick = (workerId) => {
+    setSelectedWorker(workerId);
   };
 
   return (
     <div className="money-container">
-      <h1>Ishchilar uchun oylik berish</h1>
-
-      <div className="worker-list">
-        {workers.map(worker => (
-          <div 
-            key={worker.id} 
-            className="worker-item"
-            onClick={() => openModal(worker.name)}
-          >
-            {worker.name} - Ishlagan: {groupedPayments[worker.name]?.totalAmount || 0} so‘m
-          </div>
+      <h1 className="money-title">Money Data</h1>
+      <div className="worker-buttons">
+        {Object.entries(personalData).map(([id, name]) => (
+          <button key={id} className="worker-btn" onClick={() => handleWorkerClick(id)}>
+            {name}
+          </button>
         ))}
       </div>
-
-      {isModalOpen && (
-        <div className="modal-overlay">
+      {selectedWorker && (
+        <div className="modal">
           <div className="modal-content">
-            <h2>{selectedWorker?.name} uchun ma'lumot</h2>
-            <p>Ishlab topgan: {groupedPayments[selectedWorker?.name]?.totalAmount || 0} so‘m</p>
-            <input 
-              type="number" 
-              placeholder="Oylik miqdori" 
-              value={salary} 
-              onChange={(e) => setSalary(Number(e.target.value))}
-            />
-            <select value={selectedObject} onChange={(e) => setSelectedObject(e.target.value)}>
-              <option value="">Obyektni tanlang</option>
-              {objects.map(obj => (
-                <option key={obj.id} value={obj.name}>{obj.name}</option>
-              ))}
-            </select>
-            <button onClick={handlePaySalary}>To‘lovni amalga oshirish</button>
-
-            <h3>To‘lovlar tarixi</h3>
-            <div className="tab-buttons">
-              <button 
-                onClick={() => handleTabChange("oyliklar")} 
-                className={activeTab === "oyliklar" ? "active" : ""}
-              >
-                Ishlagan kunlar
-              </button>
-              <button 
-                onClick={() => handleTabChange("earned")} 
-                className={activeTab === "earned" ? "active" : ""}
-              >
-                To‘langan
-              </button>
-            </div>
-
-            <table>
+            <h2>{personalData[selectedWorker]}</h2>
+            <table className="worker-table" style={{ borderCollapse: "collapse", width: "100%" }}>
               <thead>
-                <tr>
-                  <th>Obyekt</th>
-                  <th>Miqdor</th>
-                  <th>Sana</th>
+                <tr style={{ borderBottom: "1px solid black" }}>
+                  <th style={{ border: "1px solid black", padding: "8px" }}>Obyekt</th>
+                  <th style={{ border: "1px solid black", padding: "8px" }}>Narx</th>
+                  <th style={{ border: "1px solid black", padding: "8px" }}>Sana</th>
                 </tr>
               </thead>
               <tbody>
-                {activeTab === "oyliklar" && modalPayments.map(payment => (
-                  <tr key={payment.id}>
-                    <td>{payment.object}</td>
-                    <td>{payment.amount} so‘m</td>
-                    <td>{payment.date}</td>
-                  </tr>
-                ))}
-                {activeTab === "earned" && earnedPayments.map(payment => (
-                  <tr key={payment.id}>
-                    <td>{payment.object}</td>
-                    <td>{payment.amount} so‘m</td>
-                    <td>{payment.date}</td>
-                  </tr>
-                ))}
+                {data
+                  .filter((item) => item.ishchilar.includes(selectedWorker))
+                  .map((item) => (
+                    <tr key={item.id}>
+                      <td style={{ border: "1px solid black", padding: "8px" }}>{objectData[item.obyekt]?.name || "Noma'lum"}</td>
+                      <td style={{ border: "1px solid black", padding: "8px" }}>{priceData[item.ishTuri] || "Noma'lum"} so‘m</td>
+                      <td style={{ border: "1px solid black", padding: "8px" }}>{item.sana || "Noma'lum"}</td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
-            <button onClick={closeModal}>Yopish</button>
+            <p className="total-salary">
+              Jami ish haqi: {
+                data
+                  .filter((item) => item.ishchilar.includes(selectedWorker))
+                  .reduce((sum, item) => sum + (parseInt(priceData[item.ishTuri]) || 0), 0)
+              } so‘m
+            </p>
+            <button className="close-btn" onClick={() => setSelectedWorker(null)}>Yopish</button>
           </div>
+        </div>
+      )}
+      {loading ? (
+        <div className="loader">Loading...</div>
+      ) : (
+        <div className="money-grid">
+          {data.map((item) => (
+            <div key={item.id} className="money-card">
+              <p className="money-name">{objectData[item.obyekt]?.name || "Noma'lum"}</p>
+              <p className="money-amount">
+                {typeof item.amount === "object"
+                  ? `Narx: ${item.amount.price || "Noma'lum"}`
+                  : item.amount}
+              </p>
+              <p className="money-workers">
+                Ishchilar: {Array.isArray(item.ishchilar)
+                  ? item.ishchilar.map((id) => personalData[id] || "Noma'lum").join(", ")
+                  : "Yo'q"}
+              </p>
+              <p className="money-price">Narx: {priceData[item.ishTuri] || "Noma'lum"}</p>
+              <p className="money-date">Sana: {item.sana || "Noma'lum"}</p>
+            </div>
+          ))}
         </div>
       )}
     </div>
